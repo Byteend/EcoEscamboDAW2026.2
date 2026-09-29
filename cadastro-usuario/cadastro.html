@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro Utilizador</title>
+    <link rel="stylesheet" href="cadastro.css">
+</head>
+<body>
+
+    <header></header>
+    <div id="site-navbar"></div>
+    <script src="../assets/js/navbar.js"></script>
+
+    <main>
+        <div class="card">
+            <form class="formulario" id="registerForm">
+                <h1>Cadastro</h1>
+
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" placeholder="fulano@email.com" required>
+
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" name="name" placeholder="Fulano da Silva" required>
+
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="password" placeholder="********" required>
+
+                <label for="repitaSenha">Repita a Senha</label>
+                <input type="password" id="repitaSenha" name="password2" placeholder="********" required>
+
+                <button type="submit">Cadastrar</button>
+                <div id="registerMessage" class="form-message"></div>
+                
+                <p class="login-link">Já possui conta? <a href="../login/login.html">Fazer login</a></p>
+            </form>
+            <script>
+                document.getElementById('registerForm').addEventListener('submit', async function(event){
+                    event.preventDefault();
+                    const form = event.currentTarget;
+                    const message = document.getElementById('registerMessage');
+                    message.textContent = '';
+                    const data = new URLSearchParams(new FormData(form));
+                    try {
+                        const response = await fetch('/backend/api/register.php', {
+                            method: 'POST',
+                            body: data,
+                            credentials: 'same-origin'
+                        });
+                        const result = await response.json();
+                        if (!response.ok) {
+                            if (result.errors) {
+                                message.textContent = Object.values(result.errors).join(' ');
+                            } else {
+                                message.textContent = result.error || 'Erro no cadastro';
+                            }
+                            message.style.color = 'red';
+                            return;
+                        }
+                        message.textContent = result.message || 'Cadastro efetuado com sucesso.';
+                        message.style.color = 'green';
+                        setTimeout(() => {
+                            window.location.href = '../login/login.html';
+                        }, 1200);
+                    } catch (err) {
+                        message.textContent = 'Erro de rede. Tente novamente.';
+                        message.style.color = 'red';
+                    }
+                });
+            </script>
+        </div>
+    </main>
+
+    <footer></footer>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="cadastrar.css" />
+    <title>Cadastrar Produto</title>
+  </head>
+  <body>
+    <div id="site-navbar"></div>
+    <script src="../assets/js/navbar.js"></script>
+    <div class="card">
+      <h2>Cadastre novo produto</h2>
+
+      <form id="productForm">
+        <label for="tituloP">Título breve:<br /></label>
+        <input
+          type="text"
+          name="title"
+          id="tituloP"
+          required
+        />
+        <br /><br />
+
+        <label for="descricaoP">Descrição:<br /></label>
+        <textarea
+          name="description"
+          id="descricaoP"
+          rows="4"
+          cols="50"
+          required
+        ></textarea>
+        <br /><br />
+
+        <div id="productMessage" class="form-message"></div>
+
+        <button type="submit">Salvar</button>
+        
+        <button type="button" class="btn-voltar" onclick="window.location.href='../meus-produtos/meusProdutos.html'">Voltar</button>
+      </form>
+      <script>
+        document.getElementById('productForm').addEventListener('submit', async function(event){
+          event.preventDefault();
+          const message = document.getElementById('productMessage');
+          message.textContent = '';
+          const data = new URLSearchParams(new FormData(event.currentTarget));
+          try {
+            const response = await fetch('/backend/api/my_products.php', {
+              method: 'POST',
+              body: data,
+              credentials: 'same-origin'
+            });
+            const result = await response.json();
+            if (!response.ok) {
+              message.textContent = result.error || 'Erro ao cadastrar produto.';
+              message.style.color = 'red';
+              return;
+            }
+            message.textContent = result.message || 'Produto cadastrado com sucesso.';
+            message.style.color = 'green';
+            setTimeout(() => {
+              window.location.href = '../meus-produtos/meusProdutos.html';
+            }, 800);
+          } catch (err) {
+            message.textContent = 'Erro de rede. Tente novamente.';
+            message.style.color = 'red';
+          }
+        });
+      </script>
+    </div>
+  </body>
+</html>

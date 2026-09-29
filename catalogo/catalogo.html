@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoEscambo - Catálogo</title>
+    <link rel="stylesheet" href="catalogo.css">
+</head>
+<body>
+
+    <div id="site-navbar"></div>
+    <script src="../assets/js/navbar.js"></script>
+
+    <div class="banner-verde"></div>
+
+    <main>
+        <div class="card">
+            <div class="header-catalogo">
+                <h1>Catálogo</h1>
+                <div class="nav-links">
+                    <a href="catalogo.html" class="active">Catálogo</a> | <a href="../meus-produtos/meusProdutos.html">Meus Produtos</a>
+                </div>
+            </div>
+
+            <div class="filtros">
+                <span>Filtrar:</span>
+                <label>
+                    <input type="radio" name="filtro" value="0" id="filterAll" checked> Todos
+                </label>
+                <label>
+                    <input type="radio" name="filtro" value="1" id="filterInterested"> Só nos quais estou interessado
+                </label>
+            </div>
+
+            <div class="produto-lista">
+                <article class="produto-item" data-interested="false">
+                    <div class="produto-imagem"></div>
+                    <div class="produto-info">
+                        <h3>Câmera analógica em bom estado</h3>
+                        <p>Câmera clássica, funcionando e acompanhada de alça.</p>
+                        <small>Ofertante: Marina Souza</small>
+                    </div>
+                    <div class="acoes-produto">
+                        <button class="btn btn-interesse" type="button" aria-pressed="false">Tenho interesse</button>
+                    </div>
+                </article>
+                <article class="produto-item" data-interested="true">
+                    <div class="produto-imagem"></div>
+                    <div class="produto-info">
+                        <h3>Mesa lateral de madeira</h3>
+                        <p>Mesa compacta restaurada, com acabamento natural.</p>
+                        <small>Ofertante: Diego Martins</small>
+                    </div>
+                    <div class="acoes-produto">
+                        <button class="btn btn-interesse" type="button" aria-pressed="true">Remover interesse</button>
+                    </div>
+                </article>
+                <article class="produto-item" data-interested="false">
+                    <div class="produto-imagem"></div>
+                    <div class="produto-info">
+                        <h3>Conjunto de xícaras artesanais</h3>
+                        <p>Quatro peças de cerâmica feitas à mão.</p>
+                        <small>Ofertante: Ana Clara</small>
+                    </div>
+                    <div class="acoes-produto">
+                        <button class="btn btn-interesse" type="button" aria-pressed="false">Tenho interesse</button>
+                    </div>
+                </article>
+                <article class="produto-item" data-interested="true">
+                    <div class="produto-imagem"></div>
+                    <div class="produto-info">
+                        <h3>Livro de fotografia</h3>
+                        <p>Edição ilustrada em ótimo estado de conservação.</p>
+                        <small>Ofertante: Lucas Nascimento</small>
+                    </div>
+                    <div class="acoes-produto">
+                        <button class="btn btn-interesse" type="button" aria-pressed="true">Remover interesse</button>
+                    </div>
+                </article>
+                <article class="produto-item" data-interested="false">
+                    <div class="produto-imagem"></div>
+                    <div class="produto-info">
+                        <h3>Planta costela-de-adão</h3>
+                        <p>Muda enraizada, pronta para ser replantada.</p>
+                        <small>Ofertante: Júlia Mendes</small>
+                    </div>
+                    <div class="acoes-produto">
+                        <button class="btn btn-interesse" type="button" aria-pressed="false">Tenho interesse</button>
+                    </div>
+                </article>
+                <article class="produto-item" data-interested="true">
+                    <div class="produto-imagem"></div>
+                    <div class="produto-info">
+                        <h3>Fone Bluetooth</h3>
+                        <p>Fone sem fio com estojo carregador e cabo USB.</p>
+                        <small>Ofertante: Pedro Almeida</small>
+                    </div>
+                    <div class="acoes-produto">
+                        <button class="btn btn-interesse" type="button" aria-pressed="true">Remover interesse</button>
+                    </div>
+                </article>
+            </div>
+            <div id="catalogEmpty" class="empty-message" style="display:none;">Nenhum produto encontrado.</div>
+            <script>
+                const products = [...document.querySelectorAll('.produto-item')];
+                const emptyMessage = document.getElementById('catalogEmpty');
+                const filterAll = document.getElementById('filterAll');
+                const filterInterested = document.getElementById('filterInterested');
+
+                function applyCatalogFilter() {
+                    const interestedOnly = filterInterested.checked;
+                    let visibleCount = 0;
+
+                    products.forEach(product => {
+                        const isVisible = !interestedOnly || product.dataset.interested === 'true';
+                        product.classList.toggle('is-hidden', !isVisible);
+                        if (isVisible) visibleCount++;
+                    });
+
+                    emptyMessage.style.display = visibleCount ? 'none' : 'block';
+                }
+
+                filterAll.addEventListener('change', applyCatalogFilter);
+                filterInterested.addEventListener('change', applyCatalogFilter);
+
+                products.forEach(product => {
+                    const button = product.querySelector('.btn-interesse');
+                    button.addEventListener('click', () => {
+                        const isInterested = product.dataset.interested !== 'true';
+                        product.dataset.interested = String(isInterested);
+                        button.setAttribute('aria-pressed', String(isInterested));
+                        button.textContent = isInterested ? 'Remover interesse' : 'Tenho interesse';
+                        applyCatalogFilter();
+                    });
+                });
+            </script>
+        </div>
+    </main>
+
+    <div class="banner-verde"></div>
+
+</body>
+</html>
